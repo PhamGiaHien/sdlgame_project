@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1742220670 source:e:\project\game_uet\sdl_game\baitaplon\main.cpp
+	<SDL.h>
+	<SDL_image.h>
+	<iostream>
+	<vector>
+
+1742219797 source:e:\project\game_uet\sdl_game\baitaplon\init_screen.cpp
+
+1742219530 e:\project\game_uet\sdl_game\baitaplon\init_screen.h
+
