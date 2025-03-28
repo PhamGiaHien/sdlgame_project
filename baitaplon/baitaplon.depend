@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1743176110 source:e:\project\game_uet\sdl_game\baitaplon\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+
