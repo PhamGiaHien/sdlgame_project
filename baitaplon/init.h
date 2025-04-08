@@ -1,5 +1,5 @@
-#ifndef _INIT.H
-#define _INIT.H
+#ifndef INIT.H
+#define INIT.H
 
 #include "defs.h"
 using namespace std;
@@ -36,4 +36,5 @@ void quit_all() {
     SDL_Quit();
 }
 
-#endif // _INIT
+#endif // INIT
+
