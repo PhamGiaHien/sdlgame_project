@@ -27,6 +27,8 @@ struct Card {
 std::vector<Card> cards;
 Card* firstFlipped = nullptr;
 Card* secondFlipped = nullptr;
+Uint32 flipStartTime = 0;
+bool waitingToCheck = false;
 
 void createCards(SDL_Renderer* renderer) {
     SDL_Texture* cardTextures[] = {
@@ -52,9 +54,7 @@ void createCards(SDL_Renderer* renderer) {
 
 void drawCards(SDL_Renderer* renderer, SDL_Texture* backTexture) {
     for (const auto& card : cards) {
-        if (card.isMatched) continue; // ✅ bỏ qua lá đã matched
-
-        if (card.isFlipped) {
+        if (card.isMatched || card.isFlipped) {
             SDL_RenderCopy(renderer, card.frontTexture, NULL, &card.rect);
         } else {
             SDL_RenderCopy(renderer, backTexture, NULL, &card.rect);
@@ -64,7 +64,7 @@ void drawCards(SDL_Renderer* renderer, SDL_Texture* backTexture) {
 
 
 void handleMouseClick(int x, int y) {
-    if (secondFlipped != nullptr) return; // đang chờ xử lý, không cho lật thêm
+    if (waitingToCheck) return; // đang chờ xử lý cặp bài
 
     for (auto& card : cards) {
         if (!card.isFlipped && !card.isMatched &&
@@ -75,33 +75,16 @@ void handleMouseClick(int x, int y) {
 
             if (firstFlipped == nullptr) {
                 firstFlipped = &card;
-            } else {
+            } else if (secondFlipped == nullptr) {
                 secondFlipped = &card;
-
-                // Kiểm tra trùng
-                if (firstFlipped->frontTexture == secondFlipped->frontTexture) {
-                    firstFlipped->isMatched = true;
-                    secondFlipped->isMatched = true;
-
-                    firstFlipped = nullptr;
-                    secondFlipped = nullptr;
-                } else {
-                    // Sau 1 chút thời gian thì úp lại
-                    SDL_Delay(500); // chờ 0.5s để người chơi nhìn
-                    firstFlipped->isFlipped = false;
-                    secondFlipped->isFlipped = false;
-
-                    firstFlipped = nullptr;
-                    secondFlipped = nullptr;
-                }
+                flipStartTime = SDL_GetTicks();      // ✅ ghi thời gian lật
+                waitingToCheck = true;               // ✅ bắt đầu chờ xử lý
             }
 
             break;
         }
     }
 }
-
-
 
 
 int main(int argc, char* argv[]) {
@@ -123,39 +106,54 @@ int main(int argc, char* argv[]) {
     SDL_Event e;
 
     while (running) {
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) {
-                running = false;
-            } else if (e.type == SDL_MOUSEBUTTONDOWN) {
-                if (currentState == STATE_MENU) {
-                    currentState = STATE_PLAYING;
-                }
-                else if (currentState == STATE_PLAYING) {
-                    int mouseX = e.button.x;
-                    int mouseY = e.button.y;
-                    handleMouseClick(mouseX, mouseY); // ✅ xử lý đúng lúc bấm chuột
-                }
+    while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_QUIT) {
+            running = false;
+        } else if (e.type == SDL_MOUSEBUTTONDOWN) {
+            if (currentState == STATE_MENU) {
+                currentState = STATE_PLAYING;
+            } else if (currentState == STATE_PLAYING) {
+                int mouseX = e.button.x;
+                int mouseY = e.button.y;
+                handleMouseClick(mouseX, mouseY);
             }
         }
-
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // đen
-        SDL_RenderClear(renderer);
-
-
-        if (currentState == STATE_MENU) {
-            SDL_RenderCopy(renderer, menuImageTexture, NULL, NULL);
-
-            SDL_Rect textRect = {450, 400, 0, 0};
-            SDL_QueryTexture(menuTextTexture, NULL, NULL, &textRect.w, &textRect.h);
-            SDL_RenderCopy(renderer, menuTextTexture, NULL, &textRect);
-        }
-
-        else if (currentState == STATE_PLAYING) {
-            SDL_RenderCopy(renderer, playTexture, NULL, NULL);
-            drawCards(renderer, backTexture); // vẽ bài
-        }
-        SDL_RenderPresent(renderer);
     }
+
+    // ✅ Xử lý sau khi lật 2 lá bài và chờ 1 giây (đưa ra ngoài SDL_PollEvent)
+    if (waitingToCheck && SDL_GetTicks() - flipStartTime >= 1000) {
+        if (firstFlipped && secondFlipped) {
+            if (firstFlipped->frontTexture == secondFlipped->frontTexture) {
+                firstFlipped->isMatched = true;
+                secondFlipped->isMatched = true;
+
+                firstFlipped->isFlipped = true;
+                secondFlipped->isFlipped = true;
+            } else {
+                firstFlipped->isFlipped = false;
+                secondFlipped->isFlipped = false;
+            }
+        }
+        firstFlipped = nullptr;
+        secondFlipped = nullptr;
+        waitingToCheck = false;
+    }
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    if (currentState == STATE_MENU) {
+        SDL_RenderCopy(renderer, menuImageTexture, NULL, NULL);
+        SDL_Rect textRect = {450, 400, 0, 0};
+        SDL_QueryTexture(menuTextTexture, NULL, NULL, &textRect.w, &textRect.h);
+        SDL_RenderCopy(renderer, menuTextTexture, NULL, &textRect);
+    } else if (currentState == STATE_PLAYING) {
+        SDL_RenderCopy(renderer, playTexture, NULL, NULL);
+        drawCards(renderer, backTexture); // ✅ vẽ bài, sẽ tự bỏ qua nếu isMatched = true
+    }
+
+    SDL_RenderPresent(renderer);
+}
 
     SDL_DestroyTexture(menuImageTexture);
     SDL_DestroyTexture(menuTextTexture);
