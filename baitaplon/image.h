@@ -1,6 +1,13 @@
 #ifndef IMAGE.H
 #define IMAGE.H
 
+SDL_Texture* init_picture(SDL_Renderer* renderer) {
+    SDL_Surface* surface = IMG_Load("image/startbg.jpg");
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+    return texture;
+}
+
 SDL_Texture* play_bg(SDL_Renderer* renderer) {
     SDL_Surface* surface = IMG_Load("image/playbg.jpg");
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);

@@ -1,14 +1,14 @@
 # depslib dependency file v1.0
-1744121351 source:e:\project\game_uet\sdl_game\baitaplon\main.cpp
+1744258771 source:e:\project\game_uet\sdl_game\baitaplon\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_mixer.h>
 	<SDL_ttf.h>
+	<vector>
 	"defs.h"
 	"init.h"
 	"font.h"
-	"start.h"
 	"image.h"
 
 1744118514 e:\project\game_uet\sdl_game\baitaplon\defs.h
@@ -23,7 +23,7 @@
 1744121018 e:\project\game_uet\sdl_game\baitaplon\start.h
 	"defs.h"
 
-1744121018 e:\project\game_uet\sdl_game\baitaplon\image.h
+1744258021 e:\project\game_uet\sdl_game\baitaplon\image.h
 
 1744117322 source:e:\project\game_uet\sdl_game\baitaplon\card.cpp
 

@@ -3,13 +3,11 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
+#include <vector>
 #include "defs.h"
 #include "init.h"
 #include "font.h"
-#include "start.h"
 #include "image.h"
-
-using namespace std;
 
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
@@ -19,23 +17,106 @@ enum GameState {
     STATE_PLAYING
 };
 
+struct Card {
+    SDL_Rect rect;               // vị trí và kích thước
+    SDL_Texture* frontTexture;   // mặt trước
+    bool isFlipped;              // đã lật hay chưa
+    bool isMatched = false;
+};
+
+std::vector<Card> cards;
+Card* firstFlipped = nullptr;
+Card* secondFlipped = nullptr;
+
+void createCards(SDL_Renderer* renderer) {
+    SDL_Texture* cardTextures[] = {
+        card_image1(renderer), card_image2(renderer), card_image3(renderer),
+        card_image4(renderer), card_image5(renderer), card_image6(renderer),
+        card_image5(renderer), card_image4(renderer), card_image2(renderer),
+        card_image6(renderer), card_image3(renderer), card_image1(renderer)
+    };
+
+    SDL_Point positions[] = {
+        {100, 250}, {300, 250}, {500, 250}, {700, 250}, {900, 250}, {1100, 250},
+        {100, 500}, {300, 500}, {500, 500}, {700, 500}, {900, 500}, {1100, 500}
+    };
+
+    for (int i = 0; i < 12; ++i) {
+        Card card;
+        card.rect = { positions[i].x, positions[i].y, 150, 200 };
+        card.frontTexture = cardTextures[i];
+        card.isFlipped = false;
+        cards.push_back(card);
+    }
+}
+
+void drawCards(SDL_Renderer* renderer, SDL_Texture* backTexture) {
+    for (const auto& card : cards) {
+        if (card.isMatched) continue; // ✅ bỏ qua lá đã matched
+
+        if (card.isFlipped) {
+            SDL_RenderCopy(renderer, card.frontTexture, NULL, &card.rect);
+        } else {
+            SDL_RenderCopy(renderer, backTexture, NULL, &card.rect);
+        }
+    }
+}
+
+
+void handleMouseClick(int x, int y) {
+    if (secondFlipped != nullptr) return; // đang chờ xử lý, không cho lật thêm
+
+    for (auto& card : cards) {
+        if (!card.isFlipped && !card.isMatched &&
+            x >= card.rect.x && x <= card.rect.x + card.rect.w &&
+            y >= card.rect.y && y <= card.rect.y + card.rect.h) {
+
+            card.isFlipped = true;
+
+            if (firstFlipped == nullptr) {
+                firstFlipped = &card;
+            } else {
+                secondFlipped = &card;
+
+                // Kiểm tra trùng
+                if (firstFlipped->frontTexture == secondFlipped->frontTexture) {
+                    firstFlipped->isMatched = true;
+                    secondFlipped->isMatched = true;
+
+                    firstFlipped = nullptr;
+                    secondFlipped = nullptr;
+                } else {
+                    // Sau 1 chút thời gian thì úp lại
+                    SDL_Delay(500); // chờ 0.5s để người chơi nhìn
+                    firstFlipped->isFlipped = false;
+                    secondFlipped->isFlipped = false;
+
+                    firstFlipped = nullptr;
+                    secondFlipped = nullptr;
+                }
+            }
+
+            break;
+        }
+    }
+}
+
+
+
+
 int main(int argc, char* argv[]) {
     init_all();
 
-    SDL_Window* window = SDL_CreateWindow(WINDOW_TYPE, SDL_WINDOWPOS_CENTERED,
+    window = SDL_CreateWindow(WINDOW_TYPE, SDL_WINDOWPOS_CENTERED,
                                           SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_RESIZABLE);
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+    renderer = SDL_CreateRenderer(window, -1, 0);
 
     SDL_Texture* menuImageTexture = init_picture(renderer);
-    SDL_Texture* menuTextTexture = init_font(renderer);
     SDL_Texture* playTexture = play_bg(renderer);
-    SDL_Texture* card1Texture = card_image1(renderer);
-    SDL_Texture* card2Texture = card_image2(renderer);
-    SDL_Texture* card3Texture = card_image3(renderer);
-    SDL_Texture* card4Texture = card_image4(renderer);
-    SDL_Texture* card5Texture = card_image5(renderer);
-    SDL_Texture* card6Texture = card_image6(renderer);
-    SDL_Texture* cardbackTexture = card_imageback(renderer);
+    SDL_Texture* menuTextTexture = init_font(renderer);
+
+    SDL_Texture* backTexture = card_imageback(renderer);
+    createCards(renderer);
 
     GameState currentState = STATE_MENU;
     bool running = true;
@@ -48,6 +129,11 @@ int main(int argc, char* argv[]) {
             } else if (e.type == SDL_MOUSEBUTTONDOWN) {
                 if (currentState == STATE_MENU) {
                     currentState = STATE_PLAYING;
+                }
+                else if (currentState == STATE_PLAYING) {
+                    int mouseX = e.button.x;
+                    int mouseY = e.button.y;
+                    handleMouseClick(mouseX, mouseY); // ✅ xử lý đúng lúc bấm chuột
                 }
             }
         }
@@ -66,47 +152,7 @@ int main(int argc, char* argv[]) {
 
         else if (currentState == STATE_PLAYING) {
             SDL_RenderCopy(renderer, playTexture, NULL, NULL);
-
-            SDL_Rect backcard = {100, 250, 150, 200};
-            SDL_RenderCopy(renderer, cardbackTexture, NULL, &backcard);
-
-            SDL_Rect card1Rect = {100, 250, 150, 200};
-            SDL_RenderCopy(renderer, card1Texture, NULL, &card1Rect);
-
-            SDL_Rect card2Rect = {300, 250, 150, 200};
-            SDL_RenderCopy(renderer, card2Texture, NULL, &card2Rect);
-
-            SDL_Rect card3Rect = {500, 250, 150, 200};
-            SDL_RenderCopy(renderer, card3Texture, NULL, &card3Rect);
-
-            SDL_Rect card4Rect = {700, 250, 150, 200};
-            SDL_RenderCopy(renderer, card4Texture, NULL, &card4Rect);
-
-            SDL_Rect card5Rect = {900, 250, 150, 200};
-            SDL_RenderCopy(renderer, card5Texture, NULL, &card5Rect);
-
-            SDL_Rect card6Rect = {1100, 250, 150, 200};
-            SDL_RenderCopy(renderer, card6Texture, NULL, &card6Rect);
-
-            //rect 2
-
-            SDL_Rect card5Rect2 = {100, 500, 150, 200};
-            SDL_RenderCopy(renderer, card5Texture, NULL, &card5Rect2);
-
-            SDL_Rect card1Rect2 = {900, 500, 150, 200};
-            SDL_RenderCopy(renderer, card1Texture, NULL, &card1Rect2);
-
-            SDL_Rect card6Rect2 = {700, 500, 150, 200};
-            SDL_RenderCopy(renderer, card6Texture, NULL, &card6Rect2);
-
-            SDL_Rect card2Rect2 = {500, 500, 150, 200};
-            SDL_RenderCopy(renderer, card2Texture, NULL, &card2Rect2);
-
-            SDL_Rect card3Rect2 = {1100, 500, 150, 200};
-            SDL_RenderCopy(renderer, card3Texture, NULL, &card3Rect2);
-
-            SDL_Rect card4Rect2 = {300, 500, 150, 200};
-            SDL_RenderCopy(renderer, card4Texture, NULL, &card4Rect2);
+            drawCards(renderer, backTexture); // vẽ bài
         }
         SDL_RenderPresent(renderer);
     }

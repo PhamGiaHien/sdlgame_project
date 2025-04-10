@@ -33,6 +33,9 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="defs.h" />
+		<Unit filename="font.h" />
+		<Unit filename="image.h" />
+		<Unit filename="init.h" />
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>
