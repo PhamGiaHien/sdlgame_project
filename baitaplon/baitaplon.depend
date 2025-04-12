@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1744259216 source:e:\project\game_uet\sdl_game\baitaplon\main.cpp
+1744476355 source:e:\project\game_uet\sdl_game\baitaplon\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -10,11 +10,12 @@
 	"init.h"
 	"font.h"
 	"image.h"
+	"card.h"
 
-1744118514 e:\project\game_uet\sdl_game\baitaplon\defs.h
+1744477226 e:\project\game_uet\sdl_game\baitaplon\defs.h
 	<SDL.h>
 
-1744121018 e:\project\game_uet\sdl_game\baitaplon\init.h
+1744477291 e:\project\game_uet\sdl_game\baitaplon\init.h
 	"defs.h"
 
 1744121018 e:\project\game_uet\sdl_game\baitaplon\font.h
@@ -23,11 +24,34 @@
 1744121018 e:\project\game_uet\sdl_game\baitaplon\start.h
 	"defs.h"
 
-1744258021 e:\project\game_uet\sdl_game\baitaplon\image.h
+1744476651 e:\project\game_uet\sdl_game\baitaplon\image.h
+	<SDL.h>
 
-1744117322 source:e:\project\game_uet\sdl_game\baitaplon\card.cpp
+1744476188 source:e:\project\game_uet\sdl_game\baitaplon\card.cpp
+	"card.h"
+	"image.h"
 
-1744116543 e:\project\game_uet\sdl_game\baitaplon\card.h
+1744476188 e:\project\game_uet\sdl_game\baitaplon\card.h
 	<SDL.h>
 	<vector>
+
+1744476550 source:e:\project\game_uet\sdl_game\baitaplon\image.cpp
+	"image.h"
+	<SDL_image.h>
+
+1744477153 source:e:\project\game_uet\sdl_game\baitaplon\init.cpp
+	"init.h"
+	<iostream>
+	<SDL_image.h>
+	<SDL_mixer.h>
+	<SDL_ttf.h>
+	<SDL.h>
+
+1744477516 source:e:\project\game_uet\sdl_game\baitaplon\logic.cpp
+	"logic.h"
+
+1744477562 e:\project\game_uet\sdl_game\baitaplon\logic.h
+	<SDL.h>
+	<vector>
+	"card.h"
 
