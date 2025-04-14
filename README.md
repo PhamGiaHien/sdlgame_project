@@ -22,6 +22,7 @@ Checklist:
     Tài liệu học tham khảo:
   + https://docs.google.com/document/d/1FZ3jTqHxtyZznNWiJmmve0zYu_aSliUqLP2OsMcdehQ/edit?tab=t.0
   + https://lazyfoo.net/tutorials/SDL/index.php
+    
      AI: Chat GPT
       
 * Những kiến thức được sử dụng:
