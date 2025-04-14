@@ -10,19 +10,19 @@ Checklist:
    - Load ảnh, âm thanh, text, tạo bài, chuyển màn hình giữa các STATE
    - Tham khảo phần xử lý chuột, tráo bài ngẫu nhiên sau mỗi lần chơi
 2) Các nguồn tham khảo:
-   - Ảnh:
+    Ảnh:
   + https://www.pinterest.com/
   + https://www.freepik.com/
     
-   - Âm thanh:
+    Âm thanh:
   + âm thanh khi 2 lá bài giống nhau: https://freesound.org/people/Robinhood76/sounds/614150/
   + âm thanh lật bài: https://freesound.org/people/Koops/sounds/20250/
   + nhạc nền: https://youtu.be/sLGRpfk-Qlc?si=AGWTwfOEq0Yn7Ban
 
-   - Tài liệu học tham khảo:
+    Tài liệu học tham khảo:
   + https://docs.google.com/document/d/1FZ3jTqHxtyZznNWiJmmve0zYu_aSliUqLP2OsMcdehQ/edit?tab=t.0
   + https://lazyfoo.net/tutorials/SDL/index.php
-    - AI: Chat GPT
+     AI: Chat GPT
       
 * Những kiến thức được sử dụng:
   - Có dùng các lệnh vẽ hình
