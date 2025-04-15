@@ -1,7 +1,11 @@
 #ifndef INIT.H
 #define INIT.H
 
+#include <iostream>
 #include "defs.h"
+#include <SDL_image.h>
+#include <SDL_mixer.h>
+#include <SDL_ttf.h>
 using namespace std;
 
 bool init_all() {
@@ -32,6 +36,8 @@ void quit_all() {
     SDL_DestroyWindow(window);
     TTF_Quit();
     Mix_CloseAudio();
+    Mix_FreeChunk(flipSound);
+    Mix_FreeChunk(matchSound);
     IMG_Quit();
     SDL_Quit();
 }

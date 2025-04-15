@@ -64,5 +64,20 @@ SDL_Texture* card_imageback(SDL_Renderer* renderer) {
     return texture;
 }
 
+SDL_Texture* win_bg(SDL_Renderer* renderer) {
+    SDL_Surface* surface = IMG_Load("image/win.jpg");
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+    return texture;
+}
+
+SDL_Texture* gameover_bg(SDL_Renderer* renderer) {
+    SDL_Surface* surface = IMG_Load("image/gameover.jpg");
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+    return texture;
+}
+
+
 
 

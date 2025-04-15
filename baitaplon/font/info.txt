@@ -1,2 +1,2 @@
-﻿license: Freeware
-link: https://www.fontspace.com/short-baby-font-f34907
+﻿license: GPL
+link: https://www.fontspace.com/cabal-font-f24429
