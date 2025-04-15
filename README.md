@@ -8,7 +8,7 @@
 Checklist:
 1) Những phần tự làm:
    - Load ảnh, âm thanh, text, tạo bài, chuyển màn hình giữa các STATE
-   - Tham khảo phần xử lý chuột, tráo bài ngẫu nhiên sau mỗi lần chơi
+   - Tham khảo phần xử lý chuột, tráo bài ngẫu nhiên sau mỗi lần chơi, fix bug phần xử lí lật bài
 2) Các nguồn tham khảo:
     Ảnh:
   + https://www.pinterest.com/
